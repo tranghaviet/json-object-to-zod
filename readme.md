@@ -8,7 +8,7 @@ A very simple CLI tool to convert JSON objects or files into zod schemas.
 
 ### CLI
 
-`json-to-zod -s myJson.json -t mySchema.ts`
+`json-object-to-zod -s myJson.json -t mySchema.ts`
 
 Options:
 
@@ -20,7 +20,7 @@ Options:
 ### Programmatic
 
 ```typescript
-import { jsonToZod } from "json-to-zod";
+import { jsonToZod } from "json-object-to-zod";
 
 const myObject = {
   hello: "hi",
@@ -64,7 +64,7 @@ Take a look at the `.jtzrc.yml.example` file.
 You can use the `convertTuples` option to handle tuples correctly.
 
 ```typescript
-import { jsonToZod } from "json-to-zod";
+import { jsonToZod } from "json-object-to-zod";
 
 const myTuple = [1, "some string"];
 

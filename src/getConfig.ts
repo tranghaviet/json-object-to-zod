@@ -24,7 +24,7 @@ export const getConfig = (): z.infer<typeof ConfigSchema> | null => {
   if (!configValidationResult.success) {
     console.error(configValidationResult.error);
     throw new Error(
-      "Invalid Json To Zod config. Please double check your config file."
+      "Invalid Json To Zod config. Please double check your config file.",
     );
   }
 

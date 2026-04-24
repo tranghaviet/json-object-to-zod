@@ -1,30 +1,38 @@
 # Json-to-Zod
 
 ## Summary
-A very simple CLI tool to convert JSON objects or files into zod schemas.
-## Usage
-### CLI
-```json-to-zod -s myJson.json -t mySchema.ts```
 
-Options: 
-  -  --source/-s [source file name]
-  -  --target/-t [(optional) target file name]
-  -  --name/-n [(optional) schema name in output]
-  -  --convertTuples/-c [(optional) handle tuples correctly]
+A very simple CLI tool to convert JSON objects or files into zod schemas.
+
+## Usage
+
+### CLI
+
+`json-to-zod -s myJson.json -t mySchema.ts`
+
+Options:
+
+- --source/-s [source file name]
+- --target/-t [(optional) target file name]
+- --name/-n [(optional) schema name in output]
+- --convertTuples/-c [(optional) handle tuples correctly]
 
 ### Programmatic
+
 ```typescript
-import { jsonToZod } from "json-to-zod"
+import { jsonToZod } from "json-to-zod";
 
 const myObject = {
-    hello: "hi"
-}
+  hello: "hi",
+};
 
-const result = jsonToZod(myObject)
+const result = jsonToZod(myObject);
 
-console.log(result)
+console.log(result);
 ```
+
 ### Expected output:
+
 ```
 const schema = z.object({hello: z.string()});
 ```
@@ -52,18 +60,21 @@ schema overrides there.
 Take a look at the `.jtzrc.yml.example` file.
 
 ### Handling Tuples
+
 You can use the `convertTuples` option to handle tuples correctly.
 
 ```typescript
-import { jsonToZod } from "json-to-zod"
+import { jsonToZod } from "json-to-zod";
 
-const myTuple = [1, 'some string']
+const myTuple = [1, "some string"];
 
-const result = jsonToZod(myTuple, "schema", false, true)
+const result = jsonToZod(myTuple, "schema", false, true);
 
-console.log(result)
+console.log(result);
 ```
+
 ### Expected output:
+
 ```
 const schema = z.tuple([z.number(), z.string()]);
 ```

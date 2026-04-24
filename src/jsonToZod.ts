@@ -1,14 +1,15 @@
-import { format } from "prettier";
-import babelParser from "prettier/parser-babel";
+import { format } from "prettier/standalone";
+import * as babelPlugin from "prettier/plugins/babel";
+import * as estreePlugin from "prettier/plugins/estree";
 import { TConfig } from "./getConfig";
 
-export const jsonToZod = (
+export const jsonToZod = async (
   obj: any,
   name: string = "schema",
   module?: boolean,
   convertTuples: boolean = false,
   zodValueOverrides?: TConfig["zodValueOverrides"],
-): string => {
+): Promise<string> => {
   const parse = (obj: any, seen: object[]): string => {
     switch (typeof obj) {
       case "string":
@@ -23,20 +24,20 @@ export const jsonToZod = (
         if (obj === null) {
           return "z.null()";
         }
-        if (seen.find((_obj) => Object.is(_obj, obj))) {
+        if (seen.find(_obj => Object.is(_obj, obj))) {
           throw "Circular objects are not supported";
         }
         seen.push(obj);
         if (Array.isArray(obj)) {
           if (convertTuples) {
-            return `z.tuple([${obj.map((item) => parse(item, seen)).join(", ")}])`;
+            return `z.tuple([${obj.map(item => parse(item, seen)).join(", ")}])`;
           } else {
             const options = obj
-              .map((obj) => parse(obj, seen))
+              .map(obj => parse(obj, seen))
               .reduce(
                 (acc: string[], curr: string) =>
                   acc.includes(curr) ? acc : [...acc, curr],
-                []
+                [],
               );
             if (options.length === 1) {
               return `z.array(${options[0]})`;
@@ -62,16 +63,11 @@ export const jsonToZod = (
     }
   };
 
+  const plugins = [babelPlugin, estreePlugin];
   return module
     ? format(
         `import {z} from "zod"\n\nexport const ${name}=${parse(obj, [])}`,
-        {
-          parser: "babel",
-          plugins: [babelParser],
-        }
+        { parser: "babel", plugins },
       )
-    : format(`const ${name}=${parse(obj, [])}`, {
-        parser: "babel",
-        plugins: [babelParser],
-      });
+    : format(`const ${name}=${parse(obj, [])}`, { parser: "babel", plugins });
 };
